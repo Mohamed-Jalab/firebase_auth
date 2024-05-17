@@ -1,6 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'features/auth/bloc/login_bloc/bloc.dart';
+import 'features/auth/bloc/sign_up_bloc/bloc.dart';
+import 'features/auth/screens/login_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -8,7 +12,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => LoginBloc()),
+          BlocProvider(create: (context) => SignUpBloc()),
+        ],
+        child:const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -16,10 +25,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Firebase authentication',
-      home: MyHomePage(),
-    );
+      theme: ThemeData(fontFamily: 'Poppins'),
+      home:  const LoginScreen(),
+      );
   }
 }
 
